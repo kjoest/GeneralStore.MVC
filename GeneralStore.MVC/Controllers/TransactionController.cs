@@ -69,6 +69,8 @@ namespace GeneralStore.MVC.Controllers
         }
 
         // POST: Transaction/Delete/{id}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Delete(int? id)
         {
             Transaction transaction = _db.Transactions.Find(id); 
@@ -102,6 +104,7 @@ namespace GeneralStore.MVC.Controllers
 
         // POST: Transaction/Edit/{id}
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(Transaction transaction)
         {
             return View(transaction);
