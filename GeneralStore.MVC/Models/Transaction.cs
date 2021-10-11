@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace GeneralStore.MVC.Models
 {
@@ -17,5 +18,6 @@ namespace GeneralStore.MVC.Models
         [ForeignKey(nameof(Product))]
         public int ProductId { get; set; }
         public virtual Product Product { get; set; }
+
     }
 }

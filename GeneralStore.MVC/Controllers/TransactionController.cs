@@ -34,7 +34,7 @@ namespace GeneralStore.MVC.Controllers
         public ActionResult Create()
         {
             var viewModel = new CreateTransactionViewModel();
-            viewModel.Customers = _db.Customers.Select(customer => new SelectListItem
+             viewModel.Customers = _db.Customers.Select(customer => new SelectListItem
             {
                 Text = customer.FirstName + " " + customer.LastName,
                 Value = customer.CustomerId.ToString()
