@@ -10,8 +10,10 @@ namespace GeneralStore.MVC.Models
     public class CreateTransactionViewModel
     {
         [Required]
+        [Display(Name = "Product ID")]
         public int ProductId { get; set; }
         [Required]
+        [Display(Name = "Customer ID")]
         public int CustomerId { get; set; }
         public IEnumerable<SelectListItem> Customers { get; set; }
         public IEnumerable<SelectListItem> Products { get; set; }

@@ -13,9 +13,11 @@ namespace GeneralStore.MVC.Models
         [Key]
         public int TransactionId { get; set; }
         [ForeignKey(nameof(Customer))]
+        [Display(Name = "Customer ID")]
         public int CustomerId { get; set; }
         public virtual Customer Customer { get; set; }
         [ForeignKey(nameof(Product))]
+        [Display(Name = "Product ID")]
         public int ProductId { get; set; }
         public virtual Product Product { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using GeneralStore.MVC.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -51,9 +52,15 @@ namespace GeneralStore.MVC.Controllers
         // POST: Transaction/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateTransactionViewModel viewModel)
+        public ActionResult Create(Transaction transaction)
         {
-            return View(viewModel);
+            if (ModelState.IsValid)
+            {
+                _db.Transactions.Add(transaction);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(transaction);
         }
 
         // GET: Transaction/Delete/{id}
@@ -107,6 +114,12 @@ namespace GeneralStore.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Transaction transaction)
         {
+            if (ModelState.IsValid)
+            {
+                _db.Entry(transaction).State = EntityState.Modified;
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
             return View(transaction);
         }
     }
