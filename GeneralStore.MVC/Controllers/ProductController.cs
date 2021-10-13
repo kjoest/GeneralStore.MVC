@@ -14,6 +14,7 @@ namespace GeneralStore.MVC.Controllers
         // Add the application DB Context (link to the database)
         private ApplicationDbContext _db = new ApplicationDbContext();
 
+        [Authorize]
         // GET: Product
         public ActionResult Index()
         {
@@ -38,7 +39,8 @@ namespace GeneralStore.MVC.Controllers
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
+            // Your data is invalid
+            ViewData["ModelStateError"] = "Your model state is not valid.";
             return View(product);
         }
 

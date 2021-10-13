@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -12,6 +13,7 @@ namespace GeneralStore.MVC.Controllers
     {
         private ApplicationDbContext _db = new ApplicationDbContext();
 
+        [Authorize]
         // GET: Transaction
         public ActionResult Index()
         {
@@ -19,9 +21,13 @@ namespace GeneralStore.MVC.Controllers
         }
 
         // GET: Transaction/{id}
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
         {
-            Transaction transaction = _db.Transactions.Find(id);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "No Transaction ID Present.");
+            }
+            var transaction = _db.Transactions.Find(id);
             if(transaction == null)
             {
                 return HttpNotFound();
@@ -34,8 +40,15 @@ namespace GeneralStore.MVC.Controllers
         // ViewData / ViewBags
         public ActionResult Create()
         {
+            //ViewBag.CustomerItems = _db.Customers.Select(customer => new SelectListItem
+            //{
+            //    Text = customer.FirstName + " " + customer.LastName,
+            //    Value = customer.CustomerId.ToString()
+            //}).ToArray();
+            //ViewBag.ProductItems = new SelectList(_db.Products, "Products", "Name");
+
             var viewModel = new CreateTransactionViewModel();
-             viewModel.Customers = _db.Customers.Select(customer => new SelectListItem
+            viewModel.Customers = _db.Customers.Select(customer => new SelectListItem
             {
                 Text = customer.FirstName + " " + customer.LastName,
                 Value = customer.CustomerId.ToString()
@@ -46,25 +59,49 @@ namespace GeneralStore.MVC.Controllers
                 Value = product.ProductId.ToString()
             });
 
-            return View(viewModel);
+            return View(viewModel/*new Transaction()*/);
         }
 
         // POST: Transaction/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Transaction transaction)
+        public ActionResult Create(Transaction model)
         {
+            //ViewBag.CustomerItems = _db.Customers.Select(customer => new SelectListItem
+            //{
+            //    Text = customer.FirstName + " " + customer.LastName,
+            //    Value = customer.CustomerId.ToString()
+            //});
+            //ViewBag.ProductItems = new SelectList(_db.Products, "CustomerId", "FullName");
+
             if (ModelState.IsValid)
             {
-                _db.Transactions.Add(transaction);
-                _db.SaveChanges();
-                return RedirectToAction("Index");
+                _db.Transactions.Add(model);
+                if(_db.SaveChanges() == 1)
+                {
+                    return Redirect("/transaction");
+                }
+                ViewData["ErrorMessage"] = "Couldn't save your transaction. Please try again later";
             }
-            return View(transaction);
+            ViewData["ErrorMessage"] = "Model state was invalid";
+
+            var viewModel = new CreateTransactionViewModel();
+            viewModel.Customers = _db.Customers.Select(customer => new SelectListItem
+            {
+                Text = customer.FirstName + " " + customer.LastName,
+                Value = customer.CustomerId.ToString()
+            });
+            viewModel.Products = _db.Products.Select(product => new SelectListItem
+            {
+                Text = product.Name,
+                Value = product.ProductId.ToString()
+            });
+
+            return View(model);
         }
 
         // GET: Transaction/Delete/{id}
-        public ActionResult Delete(int id) 
+        public ActionResult Delete(int id)
         {
             Transaction transaction = _db.Transactions.Find(id);
             if (transaction == null)
@@ -80,7 +117,7 @@ namespace GeneralStore.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int? id)
         {
-            Transaction transaction = _db.Transactions.Find(id); 
+            Transaction transaction = _db.Transactions.Find(id);
             _db.Transactions.Remove(transaction);
             _db.SaveChanges();
             return RedirectToAction("Index");

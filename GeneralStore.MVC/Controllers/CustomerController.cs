@@ -13,6 +13,7 @@ namespace GeneralStore.MVC.Controllers
     {
         private ApplicationDbContext _db = new ApplicationDbContext();
 
+        [Authorize]
         // GET: Customer
         public ActionResult Index()
         {

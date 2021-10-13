@@ -3,10 +3,39 @@
 @{
     ViewBag.Title = "Index";
 }
-
 <h2>Index</h2>
 
-<p>
+@Html.ActionLink("Create a new Transaction", "Create")
+
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Customer Name</th>
+                <th>Product Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var transaction in Model)
+            {
+                <tr>
+                    <td>@transaction.TransactionId</td>
+                    <td>@transaction.Customer.FullName</td>
+                    <td>@transaction.Product.Name</td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = transaction.TransactionId })
+                        @Html.ActionLink("Details", "Details", new { id = transaction.TransactionId })
+                        @Html.ActionLink("Delete", "Delete", new { id = transaction.TransactionId })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@*<p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
@@ -20,20 +49,21 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.CustomerId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProductId)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.TransactionId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.TransactionId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.TransactionId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductId)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.TransactionId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.TransactionId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.TransactionId })
+            </td>
+        </tr>
+    }
 
-</table>
+</table>*@
